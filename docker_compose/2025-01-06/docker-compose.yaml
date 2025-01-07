@@ -13,13 +13,13 @@ services:
       NB_UID: 1000
       HOME: /home/jj
       JUPYTER_PORT: 8888
-      JUPYTER_ALLOW_INSECURE_WRITES: 1
+      JUPYTER_ALLOW_INSECURE_WRITES: 1 # required for mounted volume
     volumes:
       - type: bind
-        source: /mnt/crucible/docker/jupyter-code-server/project
+        source: /mnt/crucible/docker/jupyter-code-server/project # add your mounted source here. I am using a cifs mounted folder 
         target: /home/jj
       - conda_dir:/opt/conda
-      - /mnt/crucible/docker/templates/jupyter-code-server/mount_files/README.md:/home/jj/README.md,readonly
+      - /mnt/crucible/docker/templates/jupyter-code-server/mount_files/README.md:/home/jj/README.md:ro # you can amend this path or omit this line 
 
   
   code-server:
@@ -34,10 +34,10 @@ services:
       USER: jj
     volumes:
       - type: bind
-        source: /mnt/crucible/docker/jupyter-code-server/project/workspace
+        source: /mnt/crucible/docker/jupyter-code-server/project/workspace # add your mounted source here. I am using a cifs mounted folder 
         target: /home/jj/workspace
       - conda_dir:/opt/conda
-      - /mnt/crucible/docker/templates/jupyter-code-server/mount_files/README.md:/home/jj/workspace/README.md,readonly
+      - /mnt/crucible/docker/templates/jupyter-code-server/mount_files/README.md:/home/jj/workspace/README.md:ro # you can amend this path or omit this line 
 
 
 volumes:
