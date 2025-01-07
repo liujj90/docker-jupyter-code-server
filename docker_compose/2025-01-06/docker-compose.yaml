@@ -1,0 +1,44 @@
+services:
+  jupyter:
+    image: quay.io/jupyter/minimal-notebook:latest
+    container_name: project-jupyter
+    user: root
+    working_dir: /home/jj
+    ports:
+      - "8888:8888"
+    environment:
+      NB_USER: jj
+      GRANT_SUDO: yes
+      CONDA_DIR: /opt/conda
+      NB_UID: 1000
+      HOME: /home/jj
+      JUPYTER_PORT: 8888
+      JUPYTER_ALLOW_INSECURE_WRITES: 1
+    volumes:
+      - type: bind
+        source: /mnt/crucible/docker/jupyter-code-server/project
+        target: /home/jj
+      - conda_dir:/opt/conda
+      - /mnt/crucible/docker/templates/jupyter-code-server/mount_files/README.md:/home/jj/README.md,readonly
+
+  
+  code-server:
+    image: conda-code-server:2025-01-05
+    container_name: project-code-server
+    user: jj
+    working_dir: /home/jj/workspace
+    ports:
+      - "8080:8080"
+    environment:
+      TZ: Asia/Singapore
+      USER: jj
+    volumes:
+      - type: bind
+        source: /mnt/crucible/docker/jupyter-code-server/project/workspace
+        target: /home/jj/workspace
+      - conda_dir:/opt/conda
+      - /mnt/crucible/docker/templates/jupyter-code-server/mount_files/README.md:/home/jj/workspace/README.md,readonly
+
+
+volumes:
+  conda_dir:
